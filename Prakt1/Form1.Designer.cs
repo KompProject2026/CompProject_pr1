@@ -37,8 +37,19 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this._numAngle = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this._trkSpeed = new System.Windows.Forms.TrackBar();
+            this._btnStep = new System.Windows.Forms.Button();
             this._numV = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this._btnStop = new System.Windows.Forms.Button();
+            this._numAngle = new System.Windows.Forms.NumericUpDown();
             this._numR = new System.Windows.Forms.NumericUpDown();
             this._numY0 = new System.Windows.Forms.NumericUpDown();
             this._numX0 = new System.Windows.Forms.NumericUpDown();
@@ -46,25 +57,24 @@
             this._btnPlay = new System.Windows.Forms.Button();
             this._numW = new System.Windows.Forms.NumericUpDown();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this._btnStop = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this._chkInfo = new System.Windows.Forms.CheckBox();
+            this._chkHits = new System.Windows.Forms.CheckBox();
+            this._chkGrid = new System.Windows.Forms.CheckBox();
+            this._chkVector = new System.Windows.Forms.CheckBox();
+            this._chkTrail = new System.Windows.Forms.CheckBox();
             this._canvas = new CompProject_Reflect.Canvas();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._numAngle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._trkSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._numAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numY0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numX0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numH)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numW)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // _timer
@@ -86,7 +96,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2424, 54);
+            this.menuStrip1.Size = new System.Drawing.Size(1616, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -111,6 +121,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label8);
+            this.tabPage1.Controls.Add(this._trkSpeed);
+            this.tabPage1.Controls.Add(this._btnStep);
             this.tabPage1.Controls.Add(this._numV);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.label6);
@@ -135,27 +148,36 @@
             this.tabPage1.Text = "Модель";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // _numAngle
+            // label8
             // 
-            this._numAngle.Location = new System.Drawing.Point(187, 334);
-            this._numAngle.Maximum = new decimal(new int[] {
-            89,
-            0,
-            0,
-            0});
-            this._numAngle.Minimum = new decimal(new int[] {
-            89,
-            0,
-            0,
-            -2147483648});
-            this._numAngle.Name = "_numAngle";
-            this._numAngle.Size = new System.Drawing.Size(120, 26);
-            this._numAngle.TabIndex = 7;
-            this._numAngle.Value = new decimal(new int[] {
-            45,
-            0,
-            0,
-            0});
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(100, 728);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(187, 20);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Швидкість відтворення";
+            // 
+            // _trkSpeed
+            // 
+            this._trkSpeed.Location = new System.Drawing.Point(79, 656);
+            this._trkSpeed.Maximum = 20;
+            this._trkSpeed.Minimum = 1;
+            this._trkSpeed.Name = "_trkSpeed";
+            this._trkSpeed.Size = new System.Drawing.Size(229, 69);
+            this._trkSpeed.TabIndex = 17;
+            this._trkSpeed.Tag = "";
+            this._trkSpeed.Value = 10;
+            this._trkSpeed.Scroll += new System.EventHandler(this._trkSpeed_Scroll);
+            // 
+            // _btnStep
+            // 
+            this._btnStep.Location = new System.Drawing.Point(79, 588);
+            this._btnStep.Name = "_btnStep";
+            this._btnStep.Size = new System.Drawing.Size(228, 47);
+            this._btnStep.TabIndex = 16;
+            this._btnStep.Text = "Крок";
+            this._btnStep.UseVisualStyleBackColor = true;
+            this._btnStep.Click += new System.EventHandler(this._btnStep_Click);
             // 
             // _numV
             // 
@@ -175,6 +197,101 @@
             this._numV.TabIndex = 6;
             this._numV.Value = new decimal(new int[] {
             150,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(76, 336);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(35, 20);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "Кут";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(76, 304);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(88, 20);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Швидкість";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(76, 272);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(57, 20);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Радіус";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(76, 240);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 20);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "У0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(76, 208);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 20);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Х0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(76, 176);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(64, 20);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Висота";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(76, 144);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(67, 20);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Ширина";
+            // 
+            // _btnStop
+            // 
+            this._btnStop.Location = new System.Drawing.Point(80, 517);
+            this._btnStop.Name = "_btnStop";
+            this._btnStop.Size = new System.Drawing.Size(228, 47);
+            this._btnStop.TabIndex = 8;
+            this._btnStop.Text = "Рестарт";
+            this._btnStop.UseVisualStyleBackColor = true;
+            this._btnStop.Click += new System.EventHandler(this._btnStop_Click);
+            // 
+            // _numAngle
+            // 
+            this._numAngle.Location = new System.Drawing.Point(187, 334);
+            this._numAngle.Maximum = new decimal(new int[] {
+            89,
+            0,
+            0,
+            0});
+            this._numAngle.Minimum = new decimal(new int[] {
+            89,
+            0,
+            0,
+            -2147483648});
+            this._numAngle.Name = "_numAngle";
+            this._numAngle.Size = new System.Drawing.Size(120, 26);
+            this._numAngle.TabIndex = 7;
+            this._numAngle.Value = new decimal(new int[] {
+            45,
             0,
             0,
             0});
@@ -286,6 +403,11 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this._chkInfo);
+            this.tabPage2.Controls.Add(this._chkHits);
+            this.tabPage2.Controls.Add(this._chkGrid);
+            this.tabPage2.Controls.Add(this._chkVector);
+            this.tabPage2.Controls.Add(this._chkTrail);
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -294,78 +416,70 @@
             this.tabPage2.Text = "Вигляд";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // _btnStop
+            // _chkInfo
             // 
-            this._btnStop.Location = new System.Drawing.Point(80, 517);
-            this._btnStop.Name = "_btnStop";
-            this._btnStop.Size = new System.Drawing.Size(228, 47);
-            this._btnStop.TabIndex = 8;
-            this._btnStop.Text = "Рестарт";
-            this._btnStop.UseVisualStyleBackColor = true;
-            this._btnStop.Click += new System.EventHandler(this._btnStop_Click);
+            this._chkInfo.AutoSize = true;
+            this._chkInfo.Checked = true;
+            this._chkInfo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkInfo.Location = new System.Drawing.Point(97, 291);
+            this._chkInfo.Name = "_chkInfo";
+            this._chkInfo.Size = new System.Drawing.Size(128, 24);
+            this._chkInfo.TabIndex = 4;
+            this._chkInfo.Text = "Інфопанель";
+            this._chkInfo.UseVisualStyleBackColor = true;
+            this._chkInfo.CheckedChanged += new System.EventHandler(this._chk_CheckedChanged);
             // 
-            // label1
+            // _chkHits
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(76, 144);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 30);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Ширина";
+            this._chkHits.AutoSize = true;
+            this._chkHits.Checked = true;
+            this._chkHits.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkHits.Location = new System.Drawing.Point(97, 238);
+            this._chkHits.Name = "_chkHits";
+            this._chkHits.Size = new System.Drawing.Size(131, 24);
+            this._chkHits.TabIndex = 3;
+            this._chkHits.Text = "Точки ударів";
+            this._chkHits.UseVisualStyleBackColor = true;
+            this._chkHits.CheckedChanged += new System.EventHandler(this._chk_CheckedChanged);
             // 
-            // label2
+            // _chkGrid
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(76, 176);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(96, 30);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Висота";
+            this._chkGrid.AutoSize = true;
+            this._chkGrid.Checked = true;
+            this._chkGrid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkGrid.Location = new System.Drawing.Point(97, 190);
+            this._chkGrid.Name = "_chkGrid";
+            this._chkGrid.Size = new System.Drawing.Size(75, 24);
+            this._chkGrid.TabIndex = 2;
+            this._chkGrid.Text = "Сітка";
+            this._chkGrid.UseVisualStyleBackColor = true;
+            this._chkGrid.CheckedChanged += new System.EventHandler(this._chk_CheckedChanged);
             // 
-            // label3
+            // _chkVector
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(76, 208);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 30);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Х0";
+            this._chkVector.AutoSize = true;
+            this._chkVector.Checked = true;
+            this._chkVector.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkVector.Location = new System.Drawing.Point(97, 141);
+            this._chkVector.Name = "_chkVector";
+            this._chkVector.Size = new System.Drawing.Size(173, 24);
+            this._chkVector.TabIndex = 1;
+            this._chkVector.Text = "Вектор швидкості";
+            this._chkVector.UseVisualStyleBackColor = true;
+            this._chkVector.CheckedChanged += new System.EventHandler(this._chk_CheckedChanged);
             // 
-            // label4
+            // _chkTrail
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(76, 240);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 30);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "У0";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(76, 272);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 30);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "Радіус";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(76, 304);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(132, 30);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Швидкість";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(76, 336);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 30);
-            this.label7.TabIndex = 15;
-            this.label7.Text = "Кут";
+            this._chkTrail.AutoSize = true;
+            this._chkTrail.Checked = true;
+            this._chkTrail.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkTrail.Location = new System.Drawing.Point(97, 95);
+            this._chkTrail.Name = "_chkTrail";
+            this._chkTrail.Size = new System.Drawing.Size(70, 24);
+            this._chkTrail.TabIndex = 0;
+            this._chkTrail.Text = "Слід";
+            this._chkTrail.UseVisualStyleBackColor = true;
+            this._chkTrail.CheckedChanged += new System.EventHandler(this._chk_CheckedChanged);
             // 
             // _canvas
             // 
@@ -391,13 +505,16 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._numAngle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._trkSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._numAngle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numY0)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numX0)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numH)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numW)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -431,6 +548,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TrackBar _trkSpeed;
+        private System.Windows.Forms.Button _btnStep;
+        private System.Windows.Forms.CheckBox _chkTrail;
+        private System.Windows.Forms.CheckBox _chkInfo;
+        private System.Windows.Forms.CheckBox _chkHits;
+        private System.Windows.Forms.CheckBox _chkGrid;
+        private System.Windows.Forms.CheckBox _chkVector;
     }
 }
 
