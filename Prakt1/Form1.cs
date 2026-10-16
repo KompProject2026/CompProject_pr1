@@ -5,10 +5,12 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
 
 namespace Prakt1
 {
@@ -26,12 +28,78 @@ namespace Prakt1
         public Form1()
         {
             InitializeComponent();
+            NumericUpDown[] nums = { _numW, _numH, _numX0, _numY0, _numR, _numV, _numAngle };
+            foreach (NumericUpDown n in nums)
+                n.ValueChanged += _num_ValueChanged;
+
+            _btnSavePng.Click += _btnSavePng_Click;
             ResetBall();
         }
 
+        private void _num_ValueChanged(object sender, EventArgs e)
+        {
+            ResetBall();
+        }
         private void MainForm_Load(object sender, EventArgs e)
         {
             ResetBall();
+        }
+        private class CmpRun
+        {
+            public string Label, Short;
+            public List<PointF> Pts;
+            public Color Color;
+            public double W, H;
+        }
+        private readonly List<CmpRun> _cmpRuns = new List<CmpRun>();
+        private readonly Color[] _cmpColors = { Color.Crimson, Color.SeaGreen, Color.DarkOrange,
+    Color.MediumPurple, Color.Teal, Color.Goldenrod, Color.DeepPink, Color.SaddleBrown };
+
+        private List<PointF> SimulatePath(double x, double y, double vx, double vy,
+    double R, double W, double H, double tmax, out int hits, out double firstHit)
+        {
+            var pts = new List<PointF>();
+            pts.Add(new PointF((float)x, (float)y));
+            hits = 0;
+            firstHit = -1;
+            double t = 0;
+            int guard = 0;
+            while (t < tmax && guard++ < 5000)
+            {
+                double tx = double.MaxValue, ty = double.MaxValue;
+                if (vx > 1e-12) tx = (W - R - x) / vx; else if (vx < -1e-12) tx = (R - x) / vx;
+                if (vy > 1e-12) ty = (H - R - y) / vy; else if (vy < -1e-12) ty = (R - y) / vy;
+                double dt = Math.Min(tx, ty);
+                if (dt == double.MaxValue) break;
+                if (dt < 0) dt = 0;
+
+                if (t + dt >= tmax)
+                {
+                    dt = tmax - t;
+                    x += vx * dt; y += vy * dt;
+                    pts.Add(new PointF((float)x, (float)y));
+                    break;
+                }
+                x += vx * dt; y += vy * dt; t += dt;
+                if (firstHit < 0) firstHit = t;
+                if (tx <= ty) { vx = -vx; hits++; }
+                if (ty <= tx) { vy = -vy; hits++; }
+                pts.Add(new PointF((float)x, (float)y));
+            }
+            return pts;
+        }
+        private static void DrawPoly(Graphics g, List<PointF> src, Pen pen, Func<double, double, PointF> toScreen)
+        {
+            var pts = new List<PointF>();
+            foreach (PointF p in src)
+            {
+                PointF s = toScreen(p.X, p.Y);
+                if (pts.Count == 0 ||
+                    Math.Abs(s.X - pts[pts.Count - 1].X) > 0.01f ||
+                    Math.Abs(s.Y - pts[pts.Count - 1].Y) > 0.01f)
+                    pts.Add(s);
+            }
+            if (pts.Count >= 2) g.DrawLines(pen, pts.ToArray());
         }
 
         // зчитує параметри й ставить кулю в початкове положення
@@ -86,6 +154,73 @@ namespace Prakt1
             _canvas.Invalidate();
         }
 
+        private void _btnAddCmp_Click(object sender, EventArgs e)
+        {
+            if (_cmpRuns.Count >= 8)
+            {
+                MessageBox.Show("Максимум 8 запусків. Очистіть список.", "Порівняння");
+                return;
+            }
+            double W = (double)_numW.Value, H = (double)_numH.Value, R = (double)_numR.Value;
+            if (2 * R >= Math.Min(W, H)) return;
+
+            double x0 = Math.Max(R, Math.Min(W - R, (double)_numX0.Value));
+            double y0 = Math.Max(R, Math.Min(H - R, (double)_numY0.Value));
+            double v = (double)_numV.Value;
+            double ang = (double)_numAngle.Value;
+            double a = ang * Math.PI / 180.0;
+            double tmax = (double)_numTmax.Value;
+
+            int hits; double first;
+            List<PointF> pts = SimulatePath(x0, y0, v * Math.Cos(a), v * Math.Sin(a), R, W, H, tmax, out hits, out first);
+
+            var run = new CmpRun();
+            run.Pts = pts;
+            run.W = W; run.H = H;
+            run.Color = _cmpColors[_cmpRuns.Count];
+            run.Short = string.Format("v={0}, α={1}°", v, ang);
+            run.Label = string.Format("v={0}, α={1}°, r={2}, ({3};{4}), коробка {5}×{6} | ударів за {7} с: {8}, перший удар: {9}",
+                v, ang, R, x0, y0, W, H, tmax, hits, first < 0 ? "немає" : first.ToString("F2") + " с");
+            _cmpRuns.Add(run);
+            _clbCmp.Items.Add(run.Label, true);
+            _canvas.Invalidate();
+        }
+
+        private void _btnClearCmp_Click(object sender, EventArgs e)
+        {
+            _cmpRuns.Clear();
+            _clbCmp.Items.Clear();
+            _canvas.Invalidate();
+        }
+
+        private void _clbCmp_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // стан прапорця ще не змінився, тому перемальовуємо після події
+            BeginInvoke((Action)(() => _canvas.Invalidate()));
+        }
+
+        private void _btnSavePng_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new SaveFileDialog())
+            {
+                dlg.Filter = "PNG (*.png)|*.png";
+                dlg.FileName = "bounce_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+                try
+                {
+                    using (var bmp = new Bitmap(_canvas.Width, _canvas.Height))
+                    {
+                        _canvas.DrawToBitmap(bmp, new Rectangle(0, 0, _canvas.Width, _canvas.Height));
+                        bmp.Save(dlg.FileName, ImageFormat.Png);
+                    }
+                    MessageBox.Show("Збережено: " + dlg.FileName, "Експорт");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Помилка експорту", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
 
         private void Step(double dt)
         {
@@ -177,7 +312,18 @@ namespace Prakt1
             }
 
             g.DrawRectangle(Pens.Black, ox, oy, scale * (float)_W, scale * (float)_H);
-
+            // траєкторії збережених запусків (лише ті, що для поточної коробки)
+            for (int i = 0; i < _cmpRuns.Count; i++)
+            {
+                CmpRun r = _cmpRuns[i];
+                if (!_clbCmp.GetItemChecked(i)) continue;
+                if (r.W != _W || r.H != _H) continue;
+                using (var pen = new Pen(r.Color, 1.5f))
+                {
+                    pen.DashStyle = DashStyle.Dash;
+                    DrawPoly(g, r.Pts, pen, toScreen);
+                }
+            }
             // слід
             if (_chkTrail.Checked && _trail.Count >= 2)
             {
@@ -229,6 +375,17 @@ namespace Prakt1
                     "t = {0:F2} с\nx = {1:F1}, y = {2:F1}\n|v| = {3:F1}\nУдарів: {4}",
                     _simTime, _x, _y, Math.Sqrt(_vx * _vx + _vy * _vy), _hits);
                 g.DrawString(info, Font, Brushes.Black, 8, 8);
+            }
+            // легенда порівняння
+            int ly = 8;
+            for (int i = 0; i < _cmpRuns.Count; i++)
+            {
+                CmpRun r = _cmpRuns[i];
+                if (!_clbCmp.GetItemChecked(i) || r.W != _W || r.H != _H) continue;
+                using (var pen = new Pen(r.Color, 2f))
+                    g.DrawLine(pen, _canvas.Width - 170, ly + 7, _canvas.Width - 145, ly + 7);
+                g.DrawString(r.Short, Font, Brushes.Black, _canvas.Width - 140, ly);
+                ly += 16;
             }
         }
     }
