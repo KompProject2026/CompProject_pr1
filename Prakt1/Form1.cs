@@ -102,7 +102,6 @@ namespace Prakt1
             if (pts.Count >= 2) g.DrawLines(pen, pts.ToArray());
         }
 
-        // зчитує параметри й ставить кулю в початкове положення
         private void ResetBall()
         {
             _W = (double)_numW.Value;
@@ -195,7 +194,6 @@ namespace Prakt1
 
         private void _clbCmp_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // стан прапорця ще не змінився, тому перемальовуємо після події
             BeginInvoke((Action)(() => _canvas.Invalidate()));
         }
 
@@ -299,7 +297,6 @@ namespace Prakt1
             Func<double, double, PointF> toScreen = (x, y) =>
                 new PointF(ox + (float)x * scale, oy + (float)(_H - y) * scale);
 
-            // сітка кожні 50 одиниць
             if (_chkGrid.Checked)
             {
                 using (var pen = new Pen(Color.Gainsboro, 1f))
@@ -312,7 +309,6 @@ namespace Prakt1
             }
 
             g.DrawRectangle(Pens.Black, ox, oy, scale * (float)_W, scale * (float)_H);
-            // траєкторії збережених запусків (лише ті, що для поточної коробки)
             for (int i = 0; i < _cmpRuns.Count; i++)
             {
                 CmpRun r = _cmpRuns[i];
@@ -324,7 +320,6 @@ namespace Prakt1
                     DrawPoly(g, r.Pts, pen, toScreen);
                 }
             }
-            // слід
             if (_chkTrail.Checked && _trail.Count >= 2)
             {
                 var pts = new List<PointF>();
@@ -341,7 +336,6 @@ namespace Prakt1
                         g.DrawLines(pen, pts.ToArray());
             }
 
-            // точки ударів з номерами
             if (_chkHits.Checked)
             {
                 for (int i = 0; i < _hitPoints.Count; i++)
@@ -352,12 +346,10 @@ namespace Prakt1
                 }
             }
 
-            // куля
             PointF c = toScreen(_x, _y);
             float rr = (float)_R * scale;
             g.FillEllipse(Brushes.Black, c.X - rr, c.Y - rr, 2 * rr, 2 * rr);
 
-            // вектор швидкості
             if (_chkVector.Checked)
             {
                 using (var pen = new Pen(Color.Firebrick, 2f))
@@ -368,7 +360,6 @@ namespace Prakt1
                 }
             }
 
-            // інфопанель
             if (_chkInfo.Checked)
             {
                 string info = string.Format(
@@ -376,7 +367,7 @@ namespace Prakt1
                     _simTime, _x, _y, Math.Sqrt(_vx * _vx + _vy * _vy), _hits);
                 g.DrawString(info, Font, Brushes.Black, 8, 8);
             }
-            // легенда порівняння
+
             int ly = 8;
             for (int i = 0; i < _cmpRuns.Count; i++)
             {
